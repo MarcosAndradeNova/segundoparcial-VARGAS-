@@ -1,0 +1,153 @@
+public class ListaNodo {
+    
+    nodo prim, ult;  // Punteros al primer y último nodo
+    int cantElem;    // Contador de elementos
+
+    // ===== Constructor =====
+    public ListaNodo() {
+        prim = ult = null;
+        cantElem = 0;
+    } 
+    public boolean vacia() {
+        return cantElem == 0;
+    }
+    
+    public void insertarPos(int x, int pos) {
+    if (pos < 0 || pos > cantElem) return;
+
+    if (pos == 0) { // insertar al inicio
+        prim = new nodo(null, x, prim);
+        if (prim.prox != null) prim.prox.ant = prim;
+        if (ult == null) ult = prim;
+    } else if (pos == cantElem) { // insertar al final
+        ult = new nodo(ult, x, null);
+        if (ult.ant != null) ult.ant.prox = ult;
+        if (prim == null) prim = ult;
+    } else { // insertar en medio
+        nodo p = prim;
+        for (int i = 0; i < pos; i++) p = p.prox;
+        nodo nuevo = new nodo(p.ant, x, p);
+        p.ant.prox = nuevo;
+        p.ant = nuevo;
+    }
+    cantElem++;
+    }
+    public void insertarNumeros(int x) {
+        for (int i = x; i > 0; i /= 10) {
+            insertarPos(i, 0);
+        }
+    }
+    public void insertarNumeroP(int x) {
+        for (int i = x; i > 0; i /= 10) {
+            int dig = i % 10;
+            if (dig % 2 == 0) insertarPos(dig, 0);
+        }
+    }
+      // ===== Insertar antes de un valor específico =====
+    public void insertarA(int x, int valor) {
+        int pos = buscar(valor);
+        if (pos != -1) insertarPos(x, pos);
+    }
+
+    // ===== Insertar después de un valor específico =====
+    public void insertarDS(int x, int valor) {
+        int pos = buscar(valor);
+        if (pos != -1) insertarPos(x, pos + 1);
+    }
+    
+    public int buscar(int x) {
+        nodo p = prim;
+        int pos = 0;
+        while (p != null) {
+            if (p.elem == x) return pos;
+            p = p.prox;
+            pos++;
+        }
+        return -1;
+    }
+     @Override
+    public String toString() {
+        String s = "L->[";
+        nodo p = prim;
+        for (int i = 0; i < cantElem; i++) {
+            s += i == 0 ? p.elem : ", " + p.elem;
+            p = p.prox;
+        }
+        return s + "]";
+    }
+}
+//-----------------------------------------------------------------------------------------------------------------------------------
+public class listasArreglo {
+ 
+    public static int Max = 50;
+    public int elem[];
+    public int cant;
+    
+    public listasArreglo(){
+        cant = 0;
+        elem = new int [Max];
+    }
+    @Override
+    public String toString(){
+        String cadena = "[";
+        for(int i = 0; i<= cant; i++){
+            cadena = cadena + elem[i] + " ";
+        }
+        return cadena+"]";
+    }
+    public void insertarPos(int x, int pos){
+        if(pos >= 0  && pos <= cant && cant <= Max){
+            System.arraycopy(elem, pos, elem, pos + 1, cant++ - pos);
+            elem[pos] = x;
+        }
+    }
+    public int buscar(int x){
+        for(int i = 0; i <= cant ; i++){
+            if(elem[i] == x) return i;
+        }
+        return -1;
+    }
+    public boolean vacia() {
+        return cant == 0;
+    }
+    public void insertarNumeros(int x){
+        for(int i = x; i> 0; i/=10){
+            insertarPos( i , 0);
+        }
+    }
+    public void insertarNumeroP(int x){
+        for(int i = x; i> 0; i/=10){
+            if((i%10) / 2 == 0)
+            insertarPos( i , 0);
+        }
+    }
+    public void insertarA(int x , int pos){
+     pos = buscar(x);
+     if(pos != -1) insertarPos(x , pos);
+    }
+    public void insertarDS(int x , int pos){
+     pos = buscar(x);
+     if(pos != -1) insertarPos(x , pos);
+    }
+    
+    //---eliminar----------------------
+    public void eliminarPos(int pos) {
+    if (pos >= 0 && pos < cant) {
+        System.arraycopy(elem, pos + 1, elem, pos, cant-- - pos);
+        }
+    } 
+    public void eliminarPares() {
+    for (int i = 0; i < cant; ) {
+        if (elem[i] % 2 == 0) eliminarPos(i);
+        else i++;
+       }
+    }
+    public void eliminarAntesPos(int pos) {
+    if (pos > 0 && pos <= cant) {
+        eliminarPos(pos - 1);
+       }
+    } 
+    public void eliminarAntesDeValor(int x) {
+    int pos = buscar(x);
+    if (pos > 0) eliminarPos(pos - 1);
+    }
